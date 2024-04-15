@@ -23,11 +23,14 @@ BEGIN
 
         WHEN is_approved=false THEN
 
-            CASE WHEN date_start > dates_through THEN 'Out-Of-Range',
+            CASE 
+             WHEN date_start > dates_through THEN 'Out-Of-Range',
+
+             WHEN date_created NOT BETWEEN as_of_date AND dates_through THEN 'Out-Of-Bounds',
             
              WHEN date_start > todays_date THEN 'Future Project',
 
-             WHEN date_created NOT BETWEEN as_of_date AND dates_through THEN 'Out-Of-Bounds',
+             
 
              WHEN project_id NOT IN (SELECT project_id FROM projects_relation) THEN 'Not Sold',
 
@@ -68,4 +71,3 @@ BEGIN
     select * from fallout_report('2024-01-01', '2024-06-30','2024-12-31')
 
     --first run the tables script to copy the flat files then run this report
-    
